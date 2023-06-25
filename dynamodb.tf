@@ -2,7 +2,6 @@ resource "aws_dynamodb_table" "events" {
   name           = "Events-${terraform.workspace}"
   billing_mode   = "PAY_PER_REQUEST"
   hash_key       = "eventId"
-  range_key      = "type"
 
   attribute {
     name = "eventId"
@@ -26,5 +25,10 @@ resource "aws_dynamodb_table" "events" {
     projection_type    = "ALL"
   }
 
+  global_secondary_index {
+    name               = "eventType"
+    hash_key           = "type"
+    projection_type    = "ALL"
+  }
 
 }
