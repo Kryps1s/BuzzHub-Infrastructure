@@ -1,0 +1,59 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Event {
+  end: String!
+  eventId: String!
+  location: String
+  notes: EventNotes
+  roles: [Role!]
+  start: String!
+  type: EventType!
+}
+
+type EventNotes {
+  inspection: String
+  meeting: String
+}
+
+type Mutation {
+  createEvent(input: EventInput!): Event!
+  deleteEvent(eventId: String!): String!
+  updateEvent(eventId: String!, input: EventInput!): Event!
+}
+
+type Query {
+  getAllEvents(limit: Int, type: EventType): [Event]
+  getEvent(eventId: String!): Event
+}
+
+type Role {
+  roleName: String!
+  userName: String!
+}
+
+enum EventType {
+  BEEKEEPING
+  COLLECTIVE
+  MEETING
+}
+
+input EventInput {
+  end: String!
+  notes: EventNotesInput
+  roles: [RoleInput!]!
+  start: String!
+  type: EventType!
+}
+
+input EventNotesInput {
+  inspection: String
+  meeting: String
+}
+
+input RoleInput {
+  roleName: String!
+  userName: String!
+}

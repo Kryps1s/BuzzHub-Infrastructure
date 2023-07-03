@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "events" {
-  name           = "Events-${terraform.workspace}"
+resource "aws_dynamodb_table" "calendar" {
+  name           = "${terraform.workspace}_calendar"
   billing_mode   = "PAY_PER_REQUEST"
   hash_key       = "eventId"
 
@@ -24,11 +24,4 @@ resource "aws_dynamodb_table" "events" {
     range_key          = "start"
     projection_type    = "ALL"
   }
-
-  global_secondary_index {
-    name               = "eventType"
-    hash_key           = "type"
-    projection_type    = "ALL"
-  }
-
 }

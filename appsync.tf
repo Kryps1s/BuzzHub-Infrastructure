@@ -1,77 +1,28 @@
 resource "aws_appsync_graphql_api" "calendar" {
-  name          = "CalendarAPI-${terraform.workspace}"
+  name          = "${terraform.workspace}_calendar"
   authentication_type = "API_KEY"
-
-schema = <<EOF
-type Event {
-  eventId: String!
-  type: EventType!
-  start: String!
-  end: String!
-  roles: [Role!]
-  notes: EventNotes
-}
-
-enum EventType {
-  MEETING
-  COLLECTIVE
-  BEEKEEPING
-}
-
-type Role {
-  roleName: String!
-  userName: String!
-}
-
-type EventNotes {
-  inspection: String
-  meeting: String
-}
-
-type Query {
-  getEvent(eventId: String!): Event
-  getAllEvents: [Event!]!
-}
-
-type Mutation {
-  createEvent(input: EventInput!): Event!
-  updateEvent(eventId: String!, input: EventInput!): Event!
-  deleteEvent(eventId: String!): String!
-}
-
-input EventInput {
-  type: EventType!
-  start: String!
-  end: String!
-  roles: [RoleInput!]!
-  notes: EventNotesInput
-}
-
-input EventNotesInput {
-  inspection: String
-  meeting: String
-}
-
-input RoleInput {
-  roleName: String!
-  userName: String!
-}
-
-EOF
+  schema = file("schemas/calendar.graphql")
 }
 
 resource "aws_appsync_api_key" "calendar" {
   api_id = aws_appsync_graphql_api.calendar.id
 }
 
-resource "aws_appsync_datasource" "calendar" {
-  api_id          = aws_appsync_graphql_api.calendar.id
-  name            = "Events${terraform.workspace}"
-  type            = "AMAZON_DYNAMODB"
-  service_role_arn = "arn:aws:iam::355764039214:role/appsync-dynamodb-role"
-
-  dynamodb_config {
-    table_name = aws_dynamodb_table.events.name
+# Create data source in appsync from lambda function.
+resource "aws_appsync_datasource" "get_event_by_id_datasource" {
+  name             = "${terraform.workspace}_get_event_by_id_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.getEventById_lambda.arn
   }
 }
 
+# Create resolvers.
+resource "aws_appsync_resolver" "getEvent_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Query"
+  field       = "getEvent"
+  data_source = aws_appsync_datasource.get_event_by_id_datasource.name
+}
