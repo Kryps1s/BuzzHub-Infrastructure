@@ -45,7 +45,7 @@ resource "aws_lambda_function" "getAllEvents_lambda" {
   environment {
     variables = {
       env = terraform.workspace
-       region = "${var.region}"
+       region = var.region
     }
   }
 }
