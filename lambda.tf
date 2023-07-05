@@ -29,8 +29,8 @@ resource "aws_lambda_function" "getEventById_lambda" {
   handler          = "getEventById.lambda_handler"
   environment {
     variables = {
-      env = "${terraform.workspace}"
-      region = "${var.region}"
+      env = terraform.workspace
+      region = var.region
     }
   }
 }
@@ -44,8 +44,8 @@ resource "aws_lambda_function" "getAllEvents_lambda" {
   handler          = "getAllEvents.lambda_handler"
   environment {
     variables = {
-      env = "${terraform.workspace}"
-       region = "${var.region}"
+      env = terraform.workspace
+       region = var.region
     }
   }
 }
