@@ -26,7 +26,7 @@ type Mutation {
 
 type Query {
   getAllEvents(limit: Int, type: EventType): [Event]
-  getEvent(eventId: String!): Event
+  getEventById(eventId: String!): Event
 }
 
 type Role {
