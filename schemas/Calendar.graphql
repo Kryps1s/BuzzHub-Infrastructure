@@ -25,7 +25,7 @@ type Mutation {
 }
 
 type Query {
-  getAllEvents(limit: Int, type: EventType): [Event]
+  getAllEvents(limit: Int, type: EventType, future: Boolean): [Event]
   getEventById(eventId: String!): Event
 }
 
