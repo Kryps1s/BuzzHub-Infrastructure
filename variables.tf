@@ -8,3 +8,8 @@ variable "developers" {
   type = list(string)
   default = ["Camille"]
 }
+
+variable "domain" {
+  type = string
+  default = "buzzhub.cc"
+}
