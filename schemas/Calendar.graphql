@@ -13,6 +13,19 @@ type Event {
   type: EventType!
 }
 
+type MeetingEvent extends Event {
+  isMonthly: Boolean
+}
+
+type BeekeepingEvent extends Event {
+  job: BeekeepingJobs!
+  completed: Boolean!
+}
+
+type CollectiveEvent extends Event {
+  name: String!
+}
+
 type EventNotes {
   inspection: String
   meeting: String
@@ -38,6 +51,17 @@ enum EventType {
   BEEKEEPING
   COLLECTIVE
   MEETING
+}
+
+enum BeekeepingJobs {
+  INSPECT
+  HARVEST
+  EXTRACT
+  TREAT
+  FEED
+  SPLIT
+  NUC
+  EQUIPMENT
 }
 
 input EventInput {
