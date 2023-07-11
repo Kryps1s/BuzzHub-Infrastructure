@@ -3,7 +3,7 @@
   mutation: Mutation
 }
 
-type Event {
+interface Event {
   eventId: String!
   location: String
   notes: String
@@ -18,59 +18,48 @@ type User {
   lastName: String!
   email: String!
   phone: String
-  userName: String!
   password: String!
 }
 
-type MeetingEvent extends Event {
+type MeetingEvent implements Event {
+  eventId: String!
+  location: String
+  notes: String
+  roles: [Role!]
+  start: String!
+  type: EventType!
   isMonthly: Boolean
   end: String!
 }
 
-type CollectiveEvent extends Event {
+type CollectiveEvent implements Event {
+  eventId: String!
+  location: String
+  notes: String
+  roles: [Role!]
+  start: String!
+  type: EventType!
+  end: String!
   name: String!
-  end: String
 }
 
-type BeekeepingEvent extends Event {
+type BeekeepingEvent implements Event {
+  eventId: String!
+  location: String
+  notes: String
+  roles: [Role!]
+  start: String!
+  type: EventType!
   job: BeekeepingJob!
   end: String
   completed: Boolean!
   hiveId: String
   attendance: [User]
-}
-
-type InspectEvent extends BeekeepingEvent {
-  job: INSPECT!
   prep: String
   specialInstructions: String
   inspection: String
   nextSteps: String
   additonalNotes: String
-}
-
-type ExtractJob extends BeekeepingEvent {
-  job: EXTRACT!
-}
-
-type TreatJob extends BeekeepingEvent {
-  job: TREAT!
-}
-
-type FeedJob extends BeekeepingEvent {
-  job: FEED!
-}
-
-type SplitJob extends BeekeepingEvent {
-  job: SPLIT!
-}
-
-type NucJob extends BeekeepingEvent {
-  job: NUC!
-}
-
-type EquipmentJob extends BeekeepingEvent {
-  job: EQUIPMENT!
 }
 
 
@@ -114,7 +103,7 @@ type Query {
             job:[BeekeepingJob],
             hive:[String]): [Event!]
   getEventById(eventId: String!): Event
-  getTemplate: (type:EventType!, job:BeekeepingJob) : [String]
+  getTemplate(type:EventType!, job:BeekeepingJob) : [String]
 }
 
 type Role {

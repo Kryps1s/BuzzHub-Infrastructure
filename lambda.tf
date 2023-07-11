@@ -5,14 +5,14 @@
 # Zip All Lambda Functions
 data "archive_file" "get_event_by_id_lambda_zip" {
   type        = "zip"
-  source_file = "../BuzzHub-API/get_event_by_id.py"
+  source_file = "../BuzzHub-API/lambdas/get_event_by_id.py"
   output_path = "./zip/${terraform.workspace}_get_event_by_id.zip"
 }
 
-data "archive_file" "get_all_events_lambda_zip" {
+data "archive_file" "get_events_lambda_zip" {
   type        = "zip"
-  source_file = "../BuzzHub-API/get_all_events.py"
-  output_path = "./zip/${terraform.workspace}_get_all_events.zip"
+  source_file = "../BuzzHub-API/lambdas/get_events.py"
+  output_path = "./zip/${terraform.workspace}_get_events.zip"
 }
 
 # =============
@@ -35,13 +35,13 @@ resource "aws_lambda_function" "get_event_by_id_lambda" {
   }
 }
 
-resource "aws_lambda_function" "get_all_events_lambda" {
-  function_name    = "${terraform.workspace}_get_all_events"
-  filename         = data.archive_file.get_all_events_lambda_zip.output_path
-  source_code_hash = data.archive_file.get_all_events_lambda_zip.output_base64sha256
+resource "aws_lambda_function" "get_events_lambda" {
+  function_name    = "${terraform.workspace}_get_events"
+  filename         = data.archive_file.get_events_lambda_zip.output_path
+  source_code_hash = data.archive_file.get_events_lambda_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
-  handler          = "get_all_events.lambda_handler"
+  handler          = "get_events.lambda_handler"
   environment {
     variables = {
       env = terraform.workspace

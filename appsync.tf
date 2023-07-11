@@ -19,13 +19,13 @@ resource "aws_appsync_datasource" "get_event_by_id_datasource" {
   }
 }
 
-resource "aws_appsync_datasource" "get_all_events_datasource" {
-  name             = "${terraform.workspace}_get_all_events_datasource"
+resource "aws_appsync_datasource" "get_events_datasource" {
+  name             = "${terraform.workspace}_get_events_datasource"
   api_id           = aws_appsync_graphql_api.calendar.id
   service_role_arn = aws_iam_role.iam_appsync_role.arn
   type             = "AWS_LAMBDA"
   lambda_config {
-    function_arn = aws_lambda_function.get_all_events_lambda.arn
+    function_arn = aws_lambda_function.get_events_lambda.arn
   }
 }
 
@@ -37,9 +37,9 @@ resource "aws_appsync_resolver" "get_event_by_id_resolver" {
   data_source = aws_appsync_datasource.get_event_by_id_datasource.name
 }
 
-resource "aws_appsync_resolver" "get_all_events_resolver" {
+resource "aws_appsync_resolver" "get_events_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
   type        = "Query"
-  field       = "getAllEvents"
-  data_source = aws_appsync_datasource.get_all_events_datasource.name
+  field       = "getEvents"
+  data_source = aws_appsync_datasource.get_events_datasource.name
 }
