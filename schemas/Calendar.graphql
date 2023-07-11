@@ -4,42 +4,117 @@
 }
 
 type Event {
-  end: String!
   eventId: String!
   location: String
-  notes: EventNotes
+  notes: String
   roles: [Role!]
   start: String!
   type: EventType!
 }
 
-type MeetingEvent extends Event {
-  isMonthly: Boolean
+type User {
+  userName: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String
+  userName: String!
+  password: String!
 }
 
-type BeekeepingEvent extends Event {
-  job: BeekeepingJobs!
-  completed: Boolean!
+type MeetingEvent extends Event {
+  isMonthly: Boolean
+  end: String!
 }
 
 type CollectiveEvent extends Event {
   name: String!
+  end: String
 }
 
-type EventNotes {
+type BeekeepingEvent extends Event {
+  job: BeekeepingJob!
+  end: String
+  completed: Boolean!
+  hiveId: String
+  attendance: [User]
+}
+
+type InspectEvent extends BeekeepingEvent {
+  job: INSPECT!
+  prep: String
+  specialInstructions: String
   inspection: String
-  meeting: String
+  nextSteps: String
+  additonalNotes: String
+}
+
+type ExtractJob extends BeekeepingEvent {
+  job: EXTRACT!
+}
+
+type TreatJob extends BeekeepingEvent {
+  job: TREAT!
+}
+
+type FeedJob extends BeekeepingEvent {
+  job: FEED!
+}
+
+type SplitJob extends BeekeepingEvent {
+  job: SPLIT!
+}
+
+type NucJob extends BeekeepingEvent {
+  job: NUC!
+}
+
+type EquipmentJob extends BeekeepingEvent {
+  job: EQUIPMENT!
+}
+
+
+type Hive { 
+  hiveId: String!
+  name: String!
+  location: String
+  queen: Queen
+  treatments: [Treatment]
+  }
+
+type Queen {
+  age: String
+  source: String
+  type: String
+  marked: Boolean
+  markedColor: String
+  clipped: Boolean
+  lastSeen: String
+}
+
+type Treatment {
+  name: String!
+  date: String!
 }
 
 type Mutation {
   createEvent(input: EventInput!): Event!
   deleteEvent(eventId: String!): String!
   updateEvent(eventId: String!, input: EventInput!): Event!
+  updateBeekeepingJob(eventId: String!, input: EventInput!): BeekeepingEvent!
 }
 
 type Query {
-  getAllEvents(limit: Int, type: EventType, future: Boolean): [Event]
+  getEvents(limit: Int, 
+            dateRange: [String],
+            future: Boolean,
+            past: Boolean,
+            type: [EventType],  
+            isMonthly: Boolean,
+            job:[BeekeepingJob],
+            hive:[String]): [Event!]
   getEventById(eventId: String!): Event
+  getTemplate: (type:EventType!, job:BeekeepingJob) : [String]
 }
 
 type Role {
@@ -53,9 +128,8 @@ enum EventType {
   MEETING
 }
 
-enum BeekeepingJobs {
+enum BeekeepingJob {
   INSPECT
-  HARVEST
   EXTRACT
   TREAT
   FEED
@@ -65,19 +139,32 @@ enum BeekeepingJobs {
 }
 
 input EventInput {
-  end: String!
-  notes: EventNotesInput
+  end: String
+  notes: String
   roles: [RoleInput!]!
   start: String!
-  type: EventType!
+  location: String
 }
 
-input EventNotesInput {
-  inspection: String
-  meeting: String
+input MeetingEventInput {
+  end: String!
+  isMonthly: Boolean
 }
 
 input RoleInput {
   roleName: String!
   userName: String!
+}
+
+input BeekeepingEventInput {
+  end: String!
+  hiveId: String
+  attendance: [String]
+  completed: Boolean!
+  job: BeekeepingJob!
+  location: String
+  notes: String
+  roles: [RoleInput!]!
+  start: String!
+  type: EventType!
 }
