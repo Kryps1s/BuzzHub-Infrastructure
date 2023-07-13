@@ -5,7 +5,6 @@
 
 interface Event {
   eventId: String!
-  location: String
   notes: String
   roles: [Role!]
   start: String!
@@ -34,7 +33,6 @@ type MeetingEvent implements Event {
 
 type CollectiveEvent implements Event {
   eventId: String!
-  location: String
   notes: String
   roles: [Role!]
   start: String!
@@ -45,15 +43,14 @@ type CollectiveEvent implements Event {
 
 type BeekeepingEvent implements Event {
   eventId: String!
-  location: String
   notes: String
   roles: [Role!]
   start: String!
   type: EventType!
-  job: BeekeepingJob!
+  jobs: [BeekeepingJob]!
   end: String
   completed: Boolean!
-  hiveId: String
+  hives: [String]
   attendance: [User]
   prep: String
   specialInstructions: String
@@ -97,11 +94,10 @@ type Query {
   getEvents(limit: Int, 
             dateRange: [String],
             future: Boolean,
-            past: Boolean,
             type: [EventType],  
             isMonthly: Boolean,
-            job:[BeekeepingJob],
-            hive:[String]): [Event!]
+            jobs:[BeekeepingJob],
+            hives:[String]): [Event!]
   getEventById(eventId: String!): Event
   getTemplate(type:EventType!, job:BeekeepingJob) : [String]
 }
