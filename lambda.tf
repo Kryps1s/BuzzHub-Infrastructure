@@ -63,8 +63,8 @@ resource "aws_lambda_function" "get_events_lambda" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
-      environment.0.variables["TRELLO_KEY"],
-      environment.0.variables["TRELLO_TOKEN"]
+      environment[0].variables["TRELLO_KEY"],
+      environment[0].variables["TRELLO_TOKEN"]
     ]
   }
 }
