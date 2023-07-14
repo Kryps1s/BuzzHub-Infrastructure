@@ -9,6 +9,7 @@ interface Event {
   roles: [Role!]
   start: String!
   type: EventType!
+  name: String
 }
 
 type User {
@@ -23,6 +24,7 @@ type User {
 type MeetingEvent implements Event {
   eventId: String!
   location: String
+  name: String
   notes: String
   roles: [Role!]
   start: String!
@@ -36,6 +38,7 @@ type CollectiveEvent implements Event {
   notes: String
   roles: [Role!]
   start: String!
+  name: String
   type: EventType!
   end: String!
   name: String!
@@ -44,6 +47,7 @@ type CollectiveEvent implements Event {
 type BeekeepingEvent implements Event {
   eventId: String!
   notes: String
+  name: String
   roles: [Role!]
   start: String!
   type: EventType!
