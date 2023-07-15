@@ -121,6 +121,7 @@ enum BeekeepingJob {
   EXTRACT
   TREAT
   FEED
+  HARVEST
   SPLIT
   NUC
   EQUIPMENT
