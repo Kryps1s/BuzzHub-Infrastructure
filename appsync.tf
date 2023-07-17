@@ -59,5 +59,5 @@ resource "aws_appsync_resolver" "get_trello_members_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
   type        = "Query"
   field       = "getTrelloMembers"
-  data_source = aws_appsync_datasource.get_events_datasource.name
+  data_source = aws_appsync_datasource.get_trello_members_datasource.name
 }
