@@ -93,7 +93,7 @@ type Mutation {
   updateBeekeepingJob(eventId: String!, input: EventInput!): BeekeepingEvent!
 }
 
-interface TrelloMember {
+type TrelloMember {
   id: String!
   fullName: String!
   username: String!
