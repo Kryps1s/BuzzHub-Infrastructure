@@ -3,16 +3,10 @@
 # -------------
 
 # Zip All Lambda Functions
-data "archive_file" "get_event_by_id_lambda_zip" {
+data "archive_file" "boilerplate_zip" {
   type        = "zip"
-  source_file = "../BuzzHub-API/lambdas/get_event_by_id.py"
-  output_path = "./zip/${terraform.workspace}_get_event_by_id.zip"
-}
-
-data "archive_file" "get_events_lambda_zip" {
-  type        = "zip"
-  source_file = "../BuzzHub-API/lambdas/get_events.py"
-  output_path = "./zip/${terraform.workspace}_get_events.zip"
+  source_file = "./lambda_layers/lambda.py"
+  output_path = "./zip/lambda.zip"
 }
 
 # =============
@@ -22,8 +16,8 @@ data "archive_file" "get_events_lambda_zip" {
 # Create lambda function from zips.
 resource "aws_lambda_function" "get_event_by_id_lambda" {
   function_name    = "${terraform.workspace}_get_event_by_id"
-  filename         = data.archive_file.get_event_by_id_lambda_zip.output_path
-  source_code_hash = data.archive_file.get_event_by_id_lambda_zip.output_base64sha256
+  filename         = data.archive_file.boilerplate_zip.output_path
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
   handler          = "get_event_by_id.lambda_handler"
@@ -34,14 +28,14 @@ resource "aws_lambda_function" "get_event_by_id_lambda" {
     }
   }
   lifecycle {
-    ignore_changes = [source_code_hash]
+    ignore_changes = [source_code_hash, filename]
   }
 }
 
 resource "aws_lambda_function" "get_events_lambda" {
   function_name    = "${terraform.workspace}_get_events"
-  filename         = data.archive_file.get_events_lambda_zip.output_path
-  source_code_hash = data.archive_file.get_events_lambda_zip.output_base64sha256
+  filename         = data.archive_file.boilerplate_zip.output_path
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
   handler          = "get_events.lambda_handler"
@@ -49,7 +43,23 @@ resource "aws_lambda_function" "get_events_lambda" {
   layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
   lifecycle {
     ignore_changes = [
-      source_code_hash,environment
+      source_code_hash,environment,filename
+    ]
+  }
+}
+
+resource "aws_lambda_function" "get_trello_members_lambda" {
+  function_name    = "${terraform.workspace}_get_trello_members"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "lambda.lambda_handler"
+  #attach the layer to the lambda
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,environment,filename
     ]
   }
 }

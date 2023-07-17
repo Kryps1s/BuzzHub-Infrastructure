@@ -29,6 +29,17 @@ resource "aws_appsync_datasource" "get_events_datasource" {
   }
 }
 
+
+resource "aws_appsync_datasource" "get_trello_members_datasource" {
+  name             = "${terraform.workspace}_get_trello_members_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.get_trello_members_lambda.arn
+  }
+}
+
 # Create resolvers.
 resource "aws_appsync_resolver" "get_event_by_id_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
@@ -41,5 +52,12 @@ resource "aws_appsync_resolver" "get_events_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
   type        = "Query"
   field       = "getEvents"
+  data_source = aws_appsync_datasource.get_events_datasource.name
+}
+
+resource "aws_appsync_resolver" "get_trello_members_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Query"
+  field       = "getTrelloMembers"
   data_source = aws_appsync_datasource.get_events_datasource.name
 }
