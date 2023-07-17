@@ -5,7 +5,7 @@
 # Zip All Lambda Functions
 data "archive_file" "boilerplate_zip" {
   type        = "zip"
-  source_file = "./lambda_layers/boilerplate.py"
+  source_file = "./lambda_layers/lambda.py"
   output_path = "./zip/lambda.zip"
 }
 
@@ -50,7 +50,7 @@ resource "aws_lambda_function" "get_events_lambda" {
 
 resource "aws_lambda_function" "get_trello_members_lambda" {
   function_name    = "${terraform.workspace}_get_trello_members"
-  filename         = "lambda.zip"
+  filename         = "./zip/lambda.zip"
   source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
