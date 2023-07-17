@@ -93,6 +93,12 @@ type Mutation {
   updateBeekeepingJob(eventId: String!, input: EventInput!): BeekeepingEvent!
 }
 
+interface TrelloMember {
+  id: String!
+  fullName: String!
+  username: String!
+}
+
 type Query {
   getEvents(limit: Int, 
             dateRange: [String],
@@ -102,6 +108,7 @@ type Query {
             jobs:[BeekeepingJob],
             hives:[String]): [Event!]
   getEventById(eventId: String!): Event
+  getTrelloMembers: [TrelloMember!]
   getTemplate(type:EventType!, job:BeekeepingJob) : [String]
 }
 
