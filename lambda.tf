@@ -71,7 +71,7 @@ resource "aws_lambda_function" "create_user_lambda" {
   runtime          = "python3.10"
   handler          = "create_user.lambda_handler"
   #attach the layer to the lambda
-  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  layers = ["arn:aws:lambda:ca-central-1:355764039214:layer:dev_buzzhub_dependencies:2"]
   lifecycle {
     ignore_changes = [
       source_code_hash,environment
@@ -86,7 +86,8 @@ resource "aws_lambda_function" "login_lambda" {
   runtime          = "python3.10"
   handler          = "login.lambda_handler"
   #attach the layer to the lambda
-  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  layers = ["arn:aws:lambda:ca-central-1:355764039214:layer:dev_buzzhub_dependencies:2"]
+  #specify which layer version to use
   lifecycle {
     ignore_changes = [
       source_code_hash,environment
