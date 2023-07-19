@@ -63,6 +63,36 @@ resource "aws_lambda_function" "get_trello_members_lambda" {
     ]
   }
 }
+resource "aws_lambda_function" "create_user_lambda" {
+  function_name    = "${terraform.workspace}_create_user"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "create_user.lambda_handler"
+  #attach the layer to the lambda
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,environment
+    ]
+  }
+}
+resource "aws_lambda_function" "login_lambda" {
+  function_name    = "${terraform.workspace}_login"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "login.lambda_handler"
+  #attach the layer to the lambda
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,environment
+    ]
+  }
+}
 
 resource "aws_lambda_layer_version" "buzzhub_dependencies" {
   layer_name = "${terraform.workspace}_buzzhub_dependencies"
