@@ -29,7 +29,6 @@ resource "aws_appsync_datasource" "get_events_datasource" {
   }
 }
 
-
 resource "aws_appsync_datasource" "get_trello_members_datasource" {
   name             = "${terraform.workspace}_get_trello_members_datasource"
   api_id           = aws_appsync_graphql_api.calendar.id
@@ -37,6 +36,26 @@ resource "aws_appsync_datasource" "get_trello_members_datasource" {
   type             = "AWS_LAMBDA"
   lambda_config {
     function_arn = aws_lambda_function.get_trello_members_lambda.arn
+  }
+}
+
+resource "aws_appsync_datasource" "create_user_datasource" {
+  name             = "${terraform.workspace}_create_user_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.create_user_lambda.arn
+  }
+}
+
+resource "aws_appsync_datasource" "login_datasource" {
+  name             = "${terraform.workspace}_login_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.login_lambda.arn
   }
 }
 
@@ -60,4 +79,17 @@ resource "aws_appsync_resolver" "get_trello_members_resolver" {
   type        = "Query"
   field       = "getTrelloMembers"
   data_source = aws_appsync_datasource.get_trello_members_datasource.name
+}
+resource "aws_appsync_resolver" "create_user_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Mutation"
+  field       = "createUser"
+  data_source = aws_appsync_datasource.create_user_datasource.name
+}
+
+resource "aws_appsync_resolver" "login_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Mutation"
+  field       = "login"
+  data_source = aws_appsync_datasource.login_datasource.name
 }

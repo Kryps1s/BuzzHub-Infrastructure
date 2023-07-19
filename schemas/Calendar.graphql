@@ -13,12 +13,11 @@ interface Event {
 }
 
 type User {
-  userName: String!
   firstName: String!
   lastName: String!
   email: String!
-  phone: String
   password: String!
+  trello: String!
 }
 
 type MeetingEvent implements Event {
@@ -88,6 +87,8 @@ type Treatment {
 
 type Mutation {
   createEvent(input: EventInput!): Event!
+  createUser(input: UserInput!): String!
+  login(email: String!, password: String!): loginResponse!
   deleteEvent(eventId: String!): String!
   updateEvent(eventId: String!, input: EventInput!): Event!
   updateBeekeepingJob(eventId: String!, input: EventInput!): BeekeepingEvent!
@@ -145,6 +146,23 @@ input EventInput {
 input MeetingEventInput {
   end: String!
   isMonthly: Boolean
+}
+
+input UserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  trello: String!
+  code: String!
+}
+
+type loginResponse {
+  access_token: String!
+  refresh_token: String!
+  name: String!
+  trello: String!
+  email: String!
 }
 
 input RoleInput {
