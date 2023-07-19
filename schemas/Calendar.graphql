@@ -158,11 +158,12 @@ input UserInput {
 }
 
 type loginResponse {
-  access_token: String!
-  refresh_token: String!
-  name: String!
-  trello: String!
-  email: String!
+  access_token: String
+  refresh_token: String
+  name: String
+  trello: String
+  email: String
+  error: String
 }
 
 input RoleInput {
