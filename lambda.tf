@@ -20,6 +20,7 @@ resource "aws_lambda_function" "get_event_by_id_lambda" {
   source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
   handler          = "get_event_by_id.lambda_handler"
   environment {
     variables = {
@@ -28,7 +29,7 @@ resource "aws_lambda_function" "get_event_by_id_lambda" {
     }
   }
   lifecycle {
-    ignore_changes = [source_code_hash, filename]
+    ignore_changes = [source_code_hash, filename, environment]
   }
 }
 
@@ -80,6 +81,22 @@ resource "aws_lambda_function" "create_user_lambda" {
 }
 resource "aws_lambda_function" "login_lambda" {
   function_name    = "${terraform.workspace}_login"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "login.lambda_handler"
+  #attach the layer to the lambda
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  #specify which layer version to use
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,environment
+    ]
+  }
+}
+resource "aws_lambda_function" "save_beekeeping_report_lambda" {
+  function_name    = "${terraform.workspace}_save_beekeeping_report"
   filename         = "./zip/lambda.zip"
   source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn

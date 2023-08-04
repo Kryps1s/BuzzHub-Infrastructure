@@ -2,11 +2,20 @@ resource "aws_appsync_graphql_api" "calendar" {
   name          = "${terraform.workspace}_calendar"
   authentication_type = "API_KEY"
   schema = file("schemas/calendar.graphql")
+  
+  additional_authentication_provider {
+          authentication_type = "AMAZON_COGNITO_USER_POOLS"
+          user_pool_config {
+             aws_region   = "ca-central-1"
+             user_pool_id = aws_cognito_user_pool.user_pool.id
+            }
+        }
 }
 
 resource "aws_appsync_api_key" "calendar" {
   api_id = aws_appsync_graphql_api.calendar.id
 }
+
 
 # Create data source in appsync from lambda function.
 resource "aws_appsync_datasource" "get_event_by_id_datasource" {
@@ -59,6 +68,16 @@ resource "aws_appsync_datasource" "login_datasource" {
   }
 }
 
+resource "aws_appsync_datasource" "save_beekeeping_report_datasource" {
+  name             = "${terraform.workspace}_save_beekeeping_report_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.save_beekeeping_report_lambda.arn
+  }
+}
+
 # Create resolvers.
 resource "aws_appsync_resolver" "get_event_by_id_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
@@ -92,4 +111,11 @@ resource "aws_appsync_resolver" "login_resolver" {
   type        = "Mutation"
   field       = "login"
   data_source = aws_appsync_datasource.login_datasource.name
+}
+
+resource "aws_appsync_resolver" "save_beekeeping_report_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Mutation"
+  field       = "saveBeekeepingReport"
+  data_source = aws_appsync_datasource.save_beekeeping_report_datasource.name
 }

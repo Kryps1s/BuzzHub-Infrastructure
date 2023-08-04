@@ -13,11 +13,8 @@ interface Event {
 }
 
 type User {
-  firstName: String!
-  lastName: String!
-  email: String!
+  username: String!
   password: String!
-  trello: String!
 }
 
 type MeetingEvent implements Event {
@@ -53,36 +50,7 @@ type BeekeepingEvent implements Event {
   end: String
   completed: Boolean!
   hives: [String]
-  attendance: [User]
-  prep: String
-  specialInstructions: String
-  inspection: String
-  nextSteps: String
-  additonalNotes: String
-}
-
-
-type Hive { 
-  hiveId: String!
-  name: String!
-  location: String
-  queen: Queen
-  treatments: [Treatment]
-  }
-
-type Queen {
-  age: String
-  source: String
-  type: String
-  marked: Boolean
-  markedColor: String
-  clipped: Boolean
-  lastSeen: String
-}
-
-type Treatment {
-  name: String!
-  date: String!
+  participants: [TrelloMember!]
 }
 
 type Mutation {
@@ -91,7 +59,7 @@ type Mutation {
   login(email: String!, password: String!): loginResponse!
   deleteEvent(eventId: String!): String!
   updateEvent(eventId: String!, input: EventInput!): Event!
-  updateBeekeepingJob(eventId: String!, input: EventInput!): BeekeepingEvent!
+  saveBeekeepingReport(eventId: String!, report: String! participants: [String!]!): BeekeepingEvent!
 }
 
 type TrelloMember {
@@ -173,7 +141,7 @@ input RoleInput {
 input BeekeepingEventInput {
   end: String!
   hiveId: String
-  attendance: [String]
+  participants: [String]
   completed: Boolean!
   job: BeekeepingJob!
   location: String
