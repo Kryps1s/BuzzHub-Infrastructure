@@ -1,15 +1,11 @@
 resource "aws_appsync_graphql_api" "calendar" {
   name          = "${terraform.workspace}_calendar"
-  authentication_type = "API_KEY"
+  authentication_type = "AWS_LAMBDA"
   schema = file("schemas/calendar.graphql")
-  
-  additional_authentication_provider {
-          authentication_type = "AMAZON_COGNITO_USER_POOLS"
-          user_pool_config {
-             aws_region   = "ca-central-1"
-             user_pool_id = aws_cognito_user_pool.user_pool.id
-            }
-        }
+  lambda_authorizer_config {
+    authorizer_result_ttl_in_seconds = 0
+    authorizer_uri = aws_lambda_function.auth_lambda.arn
+  }
 }
 
 resource "aws_appsync_api_key" "calendar" {
