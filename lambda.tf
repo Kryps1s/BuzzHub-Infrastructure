@@ -95,13 +95,25 @@ resource "aws_lambda_function" "login_lambda" {
     ]
   }
 }
+resource "aws_lambda_function" "auth_lambda" {
+  function_name    = "Auth"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "Auth.lambda_handler"
+  #specify which layer version to use
+  lifecycle {
+    ignore_changes = all
+  }
+}
 resource "aws_lambda_function" "save_beekeeping_report_lambda" {
   function_name    = "${terraform.workspace}_save_beekeeping_report"
   filename         = "./zip/lambda.zip"
   source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
-  handler          = "login.lambda_handler"
+  handler          = "save_beekeeping_report.lambda_handler"
   #attach the layer to the lambda
   layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
   #specify which layer version to use
