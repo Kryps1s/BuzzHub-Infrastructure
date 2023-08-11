@@ -59,7 +59,7 @@ type Mutation {
   login(email: String!, password: String!): loginResponse!
   deleteEvent(eventId: String!): String!
   updateEvent(eventId: String!, input: EventInput!): Event!
-  saveBeekeepingReport(eventId: String!, report: String! participants: [String!]!): BeekeepingEvent!
+  saveBeekeepingReport(eventId: String!, report: String! participants: [String!]!): saveReportResponse
 }
 
 type TrelloMember {
@@ -128,6 +128,10 @@ input UserInput {
 type loginResponse {
   access_token: String!
   name: String!
+}
+
+type saveReportResponse {
+	message: String
 }
 
 input RoleInput {
