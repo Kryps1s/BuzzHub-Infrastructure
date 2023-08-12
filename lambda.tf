@@ -119,7 +119,7 @@ resource "aws_lambda_function" "save_beekeeping_report_lambda" {
   #specify which layer version to use
   lifecycle {
     ignore_changes = [
-      source_code_hash,environment
+      source_code_hash,environment,function_name,filename,publish
     ]
   }
 }
