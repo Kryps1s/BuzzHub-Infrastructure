@@ -83,7 +83,7 @@ type Query {
 
 type Role {
   roleName: String!
-  userName: String!
+  user: TrelloMember!
 }
 
 enum EventType {
