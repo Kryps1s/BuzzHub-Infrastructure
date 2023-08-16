@@ -17,8 +17,12 @@ resource "aws_s3_bucket_ownership_controls" "terraform_state_acl" {
 }
 resource "aws_s3_bucket_acl" "terraform_state_acl" {
   depends_on = [aws_s3_bucket_ownership_controls.terraform_state_acl]
-
   bucket = aws_s3_bucket.terraform_state.id
+  lifecycle {
+    ignore_changes = [
+      acl
+    ]
+  }
 }
 
 resource "aws_dynamodb_table" "terraform-lock" {

@@ -76,7 +76,7 @@ type Query {
             isMonthly: Boolean,
             jobs:[BeekeepingJob],
             hives:[String]): [Event!]
-  getEventById(eventId: String!): Event
+  getEventById(eventId: String!): getEventByIdResponse
   getTrelloMembers: [TrelloMember!]
   getTemplate(type:EventType!, job:BeekeepingJob) : [String]
 }
@@ -128,6 +128,12 @@ input UserInput {
 type loginResponse {
   access_token: String!
   name: String!
+}
+
+type getEventByIdResponse {
+	link: String
+  report: String
+  goal: String
 }
 
 type saveReportResponse {
