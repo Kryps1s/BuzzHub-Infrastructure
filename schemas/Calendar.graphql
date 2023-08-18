@@ -43,9 +43,11 @@ type BeekeepingEvent implements Event {
   eventId: String!
   notes: String
   name: String!
-  roles: [Role!]
   start: String!
   type: EventType!
+  roles: [Role!]
+  link: String
+  goal: String
   jobs: [BeekeepingJob]!
   end: String
   completed: Boolean!
