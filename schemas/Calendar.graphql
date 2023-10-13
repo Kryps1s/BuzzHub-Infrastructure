@@ -61,7 +61,7 @@ type Mutation {
   login(email: String!, password: String!): loginResponse!
   deleteEvent(eventId: String!): String!
   updateEvent(eventId: String!, input: EventInput!): Event!
-  saveBeekeepingReport(eventId: String!, report: String! participants: [String!]!): saveReportResponse
+  saveBeekeepingReport(nextInspection:String, eventId: String!, report: String! participants: [String!]!): saveReportResponse
 }
 
 type TrelloMember {
