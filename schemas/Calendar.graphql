@@ -55,13 +55,19 @@ type BeekeepingEvent implements Event {
   participants: [TrelloMember!]
 }
 
+input nextInspection{
+  date: String!
+  goal: String!
+  full: Boolean!
+}
+
 type Mutation {
   createEvent(input: EventInput!): Event!
   createUser(input: UserInput!): String!
   login(email: String!, password: String!): loginResponse!
   deleteEvent(eventId: String!): String!
   updateEvent(eventId: String!, input: EventInput!): Event!
-  saveBeekeepingReport(nextInspection:String, eventId: String!, report: String! participants: [String!]!): saveReportResponse
+  saveBeekeepingReport(nextInspection:nextInspection, eventId: String!, report: String! participants: [String!]!): saveReportResponse
 }
 
 type TrelloMember {
