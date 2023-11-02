@@ -64,6 +64,7 @@ resource "aws_lambda_function" "get_trello_members_lambda" {
     ]
   }
 }
+
 resource "aws_lambda_function" "create_user_lambda" {
   function_name    = "${terraform.workspace}_create_user"
   filename         = "./zip/lambda.zip"
@@ -79,6 +80,7 @@ resource "aws_lambda_function" "create_user_lambda" {
     ]
   }
 }
+
 resource "aws_lambda_function" "login_lambda" {
   function_name    = "${terraform.workspace}_login"
   filename         = "./zip/lambda.zip"
@@ -95,6 +97,7 @@ resource "aws_lambda_function" "login_lambda" {
     ]
   }
 }
+
 resource "aws_lambda_function" "auth_lambda" {
   function_name    = "Auth"
   filename         = "./zip/lambda.zip"
@@ -107,6 +110,7 @@ resource "aws_lambda_function" "auth_lambda" {
     ignore_changes = all
   }
 }
+
 resource "aws_lambda_function" "save_beekeeping_report_lambda" {
   function_name    = "${terraform.workspace}_save_beekeeping_report"
   filename         = "./zip/lambda.zip"
@@ -120,6 +124,22 @@ resource "aws_lambda_function" "save_beekeeping_report_lambda" {
   lifecycle {
     ignore_changes = [
       source_code_hash,environment,function_name,filename,publish
+    ]
+  }
+}
+
+resource "aws_lambda_function" "get_meeting_agenda_lambda" {
+  function_name    = "${terraform.workspace}_get_meeting_agenda"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "get_meeting_agenda.lambda_handler"
+  #attach the layer to the lambda
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,environment,filename
     ]
   }
 }
