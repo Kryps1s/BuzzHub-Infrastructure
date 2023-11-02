@@ -12,7 +12,6 @@ resource "aws_appsync_api_key" "calendar" {
   api_id = aws_appsync_graphql_api.calendar.id
 }
 
-
 # Create data source in appsync from lambda function.
 resource "aws_appsync_datasource" "get_event_by_id_datasource" {
   name             = "${terraform.workspace}_get_event_by_id_datasource"
@@ -41,6 +40,16 @@ resource "aws_appsync_datasource" "get_trello_members_datasource" {
   type             = "AWS_LAMBDA"
   lambda_config {
     function_arn = aws_lambda_function.get_trello_members_lambda.arn
+  }
+}
+
+resource "aws_appsync_datasource" "get_meeting_agenda_datasource" {
+  name             = "${terraform.workspace}_get_meeting_agenda_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.get_meeting_agenda_lambda.arn
   }
 }
 
@@ -95,6 +104,14 @@ resource "aws_appsync_resolver" "get_trello_members_resolver" {
   field       = "getTrelloMembers"
   data_source = aws_appsync_datasource.get_trello_members_datasource.name
 }
+
+resource "aws_appsync_resolver" "get_meeting_agenda_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Query"
+  field       = "getMeetingAgenda"
+  data_source = aws_appsync_datasource.get_meeting_agenda_datasource.name
+}
+
 resource "aws_appsync_resolver" "create_user_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
   type        = "Mutation"

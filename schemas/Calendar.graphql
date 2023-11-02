@@ -37,6 +37,7 @@ type CollectiveEvent implements Event {
   type: EventType!
   end: String!
   name: String!
+  participants: [TrelloMember!]
 }
 
 type BeekeepingEvent implements Event {
@@ -56,6 +57,7 @@ type BeekeepingEvent implements Event {
 }
 
 
+
 type Mutation { 
   createEvent(input: EventInput!): Event!
   createUser(input: UserInput!): String!
@@ -71,6 +73,25 @@ type TrelloMember {
   username: String!
 }
 
+type AgendaEvent { 
+  name: String!
+  start: String!
+  idList: String!
+  participants: [String!]
+  labels: [String!]
+  eventId: String!
+}
+type AgendaEventArray{
+  unassigned: [AgendaEvent!]
+  inProgress: [AgendaEvent!]
+  completed: [AgendaEvent!]
+}
+
+type Agenda {
+  BEEKEEPING: AgendaEventArray
+  COLLECTIVE: AgendaEventArray
+}
+
 type Query {
   getEvents(limit: Int, 
             dateRange: [String],
@@ -82,6 +103,7 @@ type Query {
   getEventById(eventId: String!): getEventByIdResponse
   getTrelloMembers: [TrelloMember!]
   getTemplate(type:EventType!, job:BeekeepingJob) : [String]
+  getMeetingAgenda: Agenda!
 }
 
 type Role {
