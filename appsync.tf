@@ -83,6 +83,17 @@ resource "aws_appsync_datasource" "save_beekeeping_report_datasource" {
   }
 }
 
+resource "aws_appsync_datasource" "update_event_datasource" {
+  name             = "${terraform.workspace}_update_event_datasource"
+  api_id           = aws_appsync_graphql_api.calendar.id
+  service_role_arn = aws_iam_role.iam_appsync_role.arn
+  type             = "AWS_LAMBDA"
+  lambda_config {
+    function_arn = aws_lambda_function.update_event_lambda.arn
+  }
+  
+}
+
 # Create resolvers.
 resource "aws_appsync_resolver" "get_event_by_id_resolver" {
   api_id      = aws_appsync_graphql_api.calendar.id
@@ -131,4 +142,12 @@ resource "aws_appsync_resolver" "save_beekeeping_report_resolver" {
   type        = "Mutation"
   field       = "saveBeekeepingReport"
   data_source = aws_appsync_datasource.save_beekeeping_report_datasource.name
+}
+
+resource "aws_appsync_resolver" "update_event_resolver" {
+  api_id      = aws_appsync_graphql_api.calendar.id
+  type        = "Mutation"
+  field       = "updateEvent"
+  data_source = aws_appsync_datasource.update_event_datasource.name
+  
 }
