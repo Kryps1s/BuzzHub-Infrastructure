@@ -128,6 +128,23 @@ resource "aws_lambda_function" "save_beekeeping_report_lambda" {
   }
 }
 
+resource "aws_lambda_function" "update_event_lambda" {
+  function_name    = "${terraform.workspace}_update_event"
+  filename         = "./zip/lambda.zip"
+  source_code_hash = data.archive_file.boilerplate_zip.output_base64sha256
+  role             = aws_iam_role.iam_lambda_role.arn
+  runtime          = "python3.10"
+  handler          = "update_event.lambda_handler"
+  #attach the layer to the lambda
+  layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
+  #specify which layer version to use
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,environment,function_name,filename,publish
+    ]
+  }
+}
+
 resource "aws_lambda_function" "get_meeting_agenda_lambda" {
   function_name    = "${terraform.workspace}_get_meeting_agenda"
   filename         = "./zip/lambda.zip"
