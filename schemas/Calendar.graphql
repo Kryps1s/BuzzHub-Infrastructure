@@ -75,7 +75,7 @@ type TrelloMember {
 
 type AgendaEvent { 
   name: String!
-  start: String!
+  start: String
   idList: String!
   participants: [String!]
   labels: [String!]
