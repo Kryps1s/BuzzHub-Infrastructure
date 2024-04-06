@@ -40,6 +40,7 @@ resource "aws_lambda_function" "get_events_lambda" {
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
   handler          = "get_events.lambda_handler"
+  timeout = 63
   #attach the layer to the lambda
   layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
   lifecycle {
@@ -152,6 +153,7 @@ resource "aws_lambda_function" "get_meeting_agenda_lambda" {
   role             = aws_iam_role.iam_lambda_role.arn
   runtime          = "python3.10"
   handler          = "get_meeting_agenda.lambda_handler"
+  timeout = 63
   #attach the layer to the lambda
   layers = [aws_lambda_layer_version.buzzhub_dependencies.arn]
   lifecycle {
