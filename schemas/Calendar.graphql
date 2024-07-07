@@ -56,7 +56,7 @@ type BeekeepingEvent implements Event {
   participants: [TrelloMember!]
 }
 
-input EventUpdates {
+type eventUpdates {
   name: String
   desc: String
   idMembers: String
@@ -72,7 +72,7 @@ type Mutation {
   createUser(input: UserInput!): String!
   login(email: String!, password: String!): loginResponse!
   saveBeekeepingReport(nextInspection:String, goal:String, full: Boolean, eventId: String!, report: String! participants: [String!]!): saveReportResponse
-  updateEvent(eventId: String!, updates: EventUpdates!): String!
+  updateEvent(eventId: String!, updates: eventUpdates!): String!
 }
 
 type TrelloMember {
@@ -116,7 +116,7 @@ type Query {
 
 type Role {
   roleName: String!
-  user: TrelloMember
+  user: TrelloMember!
 }
 
 enum EventType {
