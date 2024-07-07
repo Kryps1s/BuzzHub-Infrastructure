@@ -71,7 +71,7 @@ type Mutation {
   createEvent(input: EventInput!): Event!
   createUser(input: UserInput!): String!
   login(email: String!, password: String!): loginResponse!
-  saveBeekeepingReport(nextInspection:String, goal:String, full: Boolean, eventId: String!, report: String! participants: [String!]!): saveReportResponse
+  saveBeekeepingReport(nextInspection:String, goal:String, full: Boolean, eventId: String!, report: String! participants: [String!]): saveReportResponse
   updateEvent(eventId: String!, updates: eventUpdates!): String!
 }
 
