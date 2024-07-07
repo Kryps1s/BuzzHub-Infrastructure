@@ -7,7 +7,7 @@ interface Event {
   eventId: String!
   notes: String
   roles: [Role!]
-  start: String!
+  start: String
   type: EventType!
   name: String!
 }
@@ -22,7 +22,7 @@ type MeetingEvent implements Event {
   location: String
   name: String!
   notes: String
-  roles: [Role!]
+  roles: [Role]
   start: String!
   type: EventType!
   isMonthly: Boolean
@@ -85,7 +85,7 @@ type AgendaEvent {
   name: String!
   start: String
   idList: String!
-  participants: [String!]
+  participants: [Int!]
   labels: [String!]
   eventId: String!
 }
@@ -115,8 +115,8 @@ type Query {
 }
 
 type Role {
-  roleName: String!
-  user: TrelloMember!
+  roleName: String
+  user: TrelloMember
 }
 
 enum EventType {
